@@ -1,13 +1,3 @@
----
-title: "First assignment"
-author: "Laura Matkala"
-output: 
- html_document:
- toc: TRUE
----
-```{r,setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 # Introduction to Open Data Science
 
