@@ -1,12 +1,18 @@
 ---
 title: "First assignment"
 author: "Laura Matkala"
+output: 
+ html_document:
+ toc: TRUE
 ---
-# About the project
+```{r,setup, include=FALSE}
+knitr::opts_chunk$set(echo = TURE)
+```
 
-This is a course titled Introducion to open data science. We learn to use different tools, such as R, R markdown and GitHub. So, seven weeks of hard work and fun with data before Christmas! Looking forward to learning all the new things :)
+# Introduction to Open Data Science
+
+In this course we learn to use different tools, such as R, R markdown and GitHub. So, six more weeks of hard work and fun with data are ahead of us before Christmas!  I am looking forward to learning all the new things :)
 
 
 You can see my GitHub repository here <https://github.com/LauraMatkala/IODS-project>
 
-*Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
