@@ -6,7 +6,7 @@ output:
  toc: TRUE
 ---
 ```{r,setup, include=FALSE}
-knitr::opts_chunk$set(echo = TURE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Introduction to Open Data Science
