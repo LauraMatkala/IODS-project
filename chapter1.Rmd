@@ -1,4 +1,12 @@
-
+---
+title: "First assignment"
+author: "Laura Matkala"
+---
 # About the project
+
+This is a course titled Introducion to open data science. We learn to use different tools, such as R, R markdown and GitHub. So, seven weeks of hard work and fun with data before Christmas! Looking forward to learning all the new things :)
+
+
+You can see my GitHub repository here <https://github.com/LauraMatkala/IODS-project>
 
 *Write a short description about the course and add a link to your github repository here. This is an R markdown (.Rmd) file so you can use R markdown syntax. See the 'Useful links' page in the mooc area (chapter 1) for instructions.*
