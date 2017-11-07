@@ -1,8 +1,21 @@
+---
+title: "Introduction to Open Data Science"
+author: "About the course"
+author: "My GitHub repository"
+output:
+  html_document:
+    toc: TRUE
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-# Introduction to Open Data Science
+#Introduction to Open Data Science 
+
+##About the course
 
 In this course we learn to use different tools, such as R, R markdown and GitHub. So, six more weeks of hard work and fun with data are ahead of us before Christmas!  I am looking forward to learning all the new things :)
 
-
+##My Github repository
 You can see my GitHub repository here <https://github.com/LauraMatkala/IODS-project>
 
