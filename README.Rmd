@@ -1,0 +1,6 @@
+# First week of the course
+
+During this week we did our first excercises with Datacamp as well as RStudio and GitHub. Basically we used these tools to update our own course diaries. 
+
+You can take a look at my course diary here: 
+<https://lauramatkala.github.io/IODS-project/>

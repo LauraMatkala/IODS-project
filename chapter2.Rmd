@@ -1,7 +1,6 @@
-# Insert chapter 2 title here
+# First week of the course
 
-*Describe the work you have done this week and summarize your learning.*
+During this week we did our first excercises with Datacamp as well as RStudio and GitHub. Basically we used these tools to update our own course diaries.
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+You can take a look at my course diary here: 
+<https://lauramatkala.github.io/IODS-project/>
