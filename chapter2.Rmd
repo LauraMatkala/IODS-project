@@ -1,6 +1,96 @@
-# First week of the course
+# RStudio Exercise 2: Analysis 
+### Reading the data in and exploring its structure
 
-During this week we did our first excercises with Datacamp as well as RStudio and GitHub. Basically we used these tools to update our own course diaries.
+The data set that we use for this exercise is about the relationship between learning approaches and students' achievements in an introductory statistics course in Finland. The set includes students' age, attitude towards statistics , exam points and gender, as well as their replies to questions related to deep, strategic and surface learning. Likert scale (read more from [here](https://en.wikipedia.org/wiki/Likert_scale)) has been used in answering the questions and measuring the attitude.
 
-You can take a look at my course diary here: 
-<https://lauramatkala.github.io/IODS-project/>
+The following code reads in the data and gives it a name 'learning 2014'. The data file has been saved to a local folder earlier.
+
+```{r read}
+learning2014<-read.csv(file = "data/learning2014.csv", header = TRUE, sep=",")
+```
+
+With the next chunk one can check the structure and dimensions of the file with commands str() and dim() 
+
+```{r str and dim}
+str(learning2014)
+dim(learning2014)
+```
+
+### Graphical overview of data and summaries of variables
+
+Let's access the libraries of two packages, which are very useful in creating beautiful plots. The packages 'GGally' and 'ggplot2' have been installed previously. 
+
+```{r ggally and ggplot}
+library(GGally)
+library(ggplot2)
+```
+
+With the help of these packages, one can now use more advanced commands than what are availbale for basic R. Next, I will make a plot matrix, which includes all the variables from the data file. 
+```{r pairs}
+p <- ggpairs(learning2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+```
+
+
+The reddish color to represents female and greenish/blueish represents male in the above plot. It seems that the variables 'Points' and 'Attitude' correlate with each other the most of all variables. For male this correlation is slightly higher than for female, but the difference is basically non-existent. Gender in general doesn't make a difference in the amount of points students have gained. Male seem to have a better attitude towards statistics than female on the Likert scale. 
+
+What comes to different types of questions, it looks like female have given higher points to surface learning questions then male. Surface learning questions in the questionnaire are related to somehow negative feelings of learning. They include questions like "Often I find myself wondering whether the work I'm doing here is really worthwhile." or " I often have trouble in making sense of the things I have to remember."  On the other hand female also get slightly higher points in questions of strategic learning than male. Strategic learning questions are more positive, such as "I organize my study time carefully to make the best use of it." or "I'm good at following up some of the reading suggested by lecturers or tutors."
+
+###Let's create a model (parts 3 and 4)
+
+In this section I create a linear multiple regression model, which uses Age, Attitude and gender as explanatory variables for 'Points'. A linear multiple regression model in this case takes the form
+$y = \alpha+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon$, where Age, Attitude and gender are estimates of $\beta$, $\alpha$ is an intercept and $\epsilon$ is the error term/random noise.
+
+Here is the model:
+
+```{r multiple regression}
+my_model <- lm(Points ~ Age + Attitude + gender, data = learning2014)
+```
+
+And here is the summary of the model:
+
+```{r summary of the model}
+summary(my_model)
+```
+
+This model is trying to minimize the residuals, which are the prediction errors of the model. The best model fit is found so that the sum of the squared residuals is minimized.
+
+The $\beta$ values this model gives us are -0.07, 3.6 and -0.33,respectively, whereas the $\alpha$ (intercept) is 13.4. Standard error for $\alpha$ is 2.29 and for $\beta$s 0.05, 0.59 and 0.92, respectively. If we look at the p-values with a significance level of either 0.05 or 0.01, it seems Attitude is the only one of the chosen explanatory variable that has a statistically significant relationship with Points. The p-value of Attitude is low, only 8.34e-09. Next I will leave out other explanatory variables than Attitude and see if the model improves.
+
+Here is the model: 
+
+```{r simple regression}
+my_model2 <-lm(Points ~ Attitude, data = learning2014)
+```
+
+Let's see how the summary of the new model looks like:
+
+```{r summary of model2}
+summary(my_model2)
+```
+
+The p-value got smaller, $\alpha$ is now 11.6 and beta 3.52. The standard errors of $\alpha$ and $\beta$ got smaller than in the previous model. If one uses these estimated values of alpha and beta, the form of the model is:
+
+$y = 11.6 + 3.52x+\epsilon$
+
+The biggest interest is in the $\beta$ value. It tells you, that every time x increases by one unit, y increases by 3.52 units. The multiple R-squared for this model is approximately 0.2. This value tells how well the model fits actual data. Low values of R-squared don't necessarily mean that the model is not working. Human behavior is difficult to predict, so R-squared of 0.2 may actually be quite a good fit. 
+
+###Diagnostic plots
+
+Lets's take a look at a couple of plots, which helps in deciding whether the model works or not. These plots are Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. They all look into different aspects of the error, $\epsilon$, in the model. 
+
+```{r diagnostic plots}
+par(mfrow = c(2,2))
+plot(my_model2, which = c(1, 2, 5))
+```
+
+In order for linear regression models to be valid, assumptions of the $\epsilon$ need to be made.   
+
+Residuals vs Fitted values plot deals with the constant variance assumption, which means that the size of the errors should not depend on the explanatory variables. This means that there should be no pattern in the residuals vs fitted plot. If you look at the plot above, it seems that there really is no clear pattern.   
+
+The QQ-plot looks at the normality of errors. The errors are assumed to be normally distributed in order to be able to use linear models. The better the data points fall within the straight line drawn in the QQ plot, the better is the fit to the normality assumption. The QQ-plot of my model looks quite ok. 
+
+Leverage measures how much impact a single value has on the model. The plot Residuals vs Leverage can help in finding out if some values have an unusually high impact. It looks like there are no single outliers in the plot above.
+
+Overall it looks like the model fits the data reasonably well. 
