@@ -122,11 +122,11 @@ $(document).ready(function () {
 <div id="rstudio-exercise-2-analysis" class="section level1">
 <h1>RStudio Exercise 2: Analysis</h1>
 <div id="reading-the-data-in-and-exploring-its-structure" class="section level3">
-<h3>Reading the data in and exploring its structure</h3>
+<h3>[Reading the data in and exploring its structure]</h3>
 <p>The data set that we use for this exercise is about the relationship between learning approaches and students’ achievements in an introductory statistics course in Finland. The set includes students’ age, attitude towards statistics , exam points and gender, as well as their replies to questions related to deep, strategic and surface learning. Likert scale (read more from <a href="https://en.wikipedia.org/wiki/Likert_scale">here</a>) has been used in answering the questions and measuring the attitude.</p>
 <p>The following code reads in the data and gives it a name ‘learning 2014’. The data file has been saved to a local folder earlier.</p>
 <pre class="r"><code>learning2014&lt;-read.csv(file = &quot;data/learning2014.csv&quot;, header = TRUE, sep=&quot;,&quot;)</code></pre>
-<p>With the next chunk one can check the structure and dimensions of the file with commands str() and dim()</p>
+<p>With the next commands one can check the structure and dimensions of the file with commands str() and dim()</p>
 <pre class="r"><code>str(learning2014)</code></pre>
 <pre><code>## 'data.frame':    166 obs. of  7 variables:
 ##  $ Age     : int  53 55 49 53 49 38 50 37 37 42 ...
@@ -140,7 +140,7 @@ $(document).ready(function () {
 <pre><code>## [1] 166   7</code></pre>
 </div>
 <div id="graphical-overview-of-data-and-summaries-of-variables" class="section level3">
-<h3>Graphical overview of data and summaries of variables</h3>
+<h3>[Graphical overview of data and summaries of variables]</h3>
 <p>Let’s access the libraries of two packages, which are very useful in creating beautiful plots. The packages ‘GGally’ and ‘ggplot2’ have been installed previously.</p>
 <pre class="r"><code>library(GGally)</code></pre>
 <pre><code>## Warning: package 'GGally' was built under R version 3.4.2</code></pre>
@@ -155,7 +155,7 @@ p</code></pre>
 <p>What comes to different types of questions, it looks like female have given higher points to surface learning questions then male. Surface learning questions in the questionnaire are related to somehow negative feelings of learning. They include questions like “Often I find myself wondering whether the work I’m doing here is really worthwhile.” or &quot; I often have trouble in making sense of the things I have to remember.&quot; On the other hand female also get slightly higher points in questions of strategic learning than male. Strategic learning questions are more positive, such as “I organize my study time carefully to make the best use of it.” or “I’m good at following up some of the reading suggested by lecturers or tutors.”</p>
 </div>
 <div id="lets-create-a-model-parts-3-and-4" class="section level3">
-<h3>Let’s create a model (parts 3 and 4)</h3>
+<h3>[Let’s create a model (parts 3 and 4)]</h3>
 <p>In this section I create a linear multiple regression model, which uses Age, Attitude and gender as explanatory variables for ‘Points’. A linear multiple regression model in this case takes the form <span class="math inline">\(y = \alpha+\beta_1x_1+\beta_2x_2+\beta_3x_3+\epsilon\)</span>, where Age, Attitude and gender are estimates of <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\alpha\)</span> is an intercept and <span class="math inline">\(\epsilon\)</span> is the error term/random noise.</p>
 <p>Here is the model:</p>
 <pre class="r"><code>my_model &lt;- lm(Points ~ Age + Attitude + gender, data = learning2014)</code></pre>
@@ -210,7 +210,7 @@ p</code></pre>
 <p>The biggest interest is in the <span class="math inline">\(\beta\)</span> value. It tells you, that every time x increases by one unit, y increases by 3.52 units. The multiple R-squared for this model is approximately 0.2. This value tells how well the model fits actual data. Low values of R-squared don’t necessarily mean that the model is not working. Human behavior is difficult to predict, so R-squared of 0.2 may actually be quite a good fit.</p>
 </div>
 <div id="diagnostic-plots" class="section level3">
-<h3>Diagnostic plots</h3>
+<h3>[Diagnostic plots]</h3>
 <p>Lets’s take a look at a couple of plots, which helps in deciding whether the model works or not. These plots are Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. They all look into different aspects of the error, <span class="math inline">\(\epsilon\)</span>, in the model.</p>
 <pre class="r"><code>par(mfrow = c(2,2))
 plot(my_model2, which = c(1, 2, 5))</code></pre>

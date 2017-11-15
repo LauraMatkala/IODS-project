@@ -9,7 +9,7 @@ The following code reads in the data and gives it a name 'learning 2014'. The da
 learning2014<-read.csv(file = "data/learning2014.csv", header = TRUE, sep=",")
 ```
 
-With the next chunk one can check the structure and dimensions of the file with commands str() and dim() 
+With the next commands one can check the structure and dimensions of the file with commands str() and dim() 
 
 ```{r str and dim}
 str(learning2014)
