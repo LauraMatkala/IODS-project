@@ -3,6 +3,6 @@
 
 In this course we learn to use different tools, such as R, R markdown and GitHub. The participants have various backgrounds, but everyone seems to have had somewhat similar aims to attend the course. So, six more weeks of hard work and fun with data are ahead of us before Christmas!  I am looking forward to learning all the new things :)
 
-## My Github repository
+### My Github repository
 You can see my GitHub repository here: <https://github.com/LauraMatkala/IODS-project>
 
