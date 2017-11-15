@@ -143,7 +143,12 @@ $(document).ready(function () {
 <li><a href="#about-the-course">About the course</a><ul>
 <li><a href="#my-github-repository">My Github repository</a></li>
 </ul></li>
-<li><a href="#rstudio-exercise-2-analysis">RStudio Exercise 2: Analysis</a></li>
+<li><a href="#rstudio-exercise-2-analysis">RStudio Exercise 2: Analysis</a><ul>
+<li><a href="#reading-the-data-in-and-exploring-its-structure">Reading the data in and exploring its structure</a></li>
+<li><a href="#graphical-overview-of-data-and-summaries-of-variables">Graphical overview of data and summaries of variables</a></li>
+<li><a href="#lets-create-a-model-parts-3-and-4">Let’s create a model (parts 3 and 4)</a></li>
+<li><a href="#diagnostic-plots">Diagnostic plots</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -164,7 +169,7 @@ $(document).ready(function () {
 <p>The data set that we use for this exercise is about the relationship between learning approaches and students’ achievements in an introductory statistics course in Finland. The set includes students’ age, attitude towards statistics , exam points and gender, as well as their replies to questions related to deep, strategic and surface learning. Likert scale (read more from <a href="https://en.wikipedia.org/wiki/Likert_scale">here</a>) has been used in answering the questions and measuring the attitude.</p>
 <p>The following code reads in the data and gives it a name ‘learning 2014’. The data file has been saved to a local folder earlier.</p>
 <pre class="r"><code>learning2014&lt;-read.csv(file = &quot;data/learning2014.csv&quot;, header = TRUE, sep=&quot;,&quot;)</code></pre>
-<p>With the next chunk one can check the structure and dimensions of the file with commands str() and dim()</p>
+<p>With the next commands one can check the structure and dimensions of the file with commands str() and dim()</p>
 <pre class="r"><code>str(learning2014)</code></pre>
 <pre><code>## 'data.frame':    166 obs. of  7 variables:
 ##  $ Age     : int  53 55 49 53 49 38 50 37 37 42 ...
