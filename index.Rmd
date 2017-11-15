@@ -3,7 +3,7 @@ title: "IODS course project"
 author: "Laura Matkala"
 output:
   html_document:
-    theme: spacelab
+    theme: tango
     toc: true
     toc_depth: 3
     fig_caption: true
