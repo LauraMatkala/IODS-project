@@ -1,0 +1,97 @@
+# R studio exercise 3: logistic regression
+
+### Basic information about the data set 
+In this exercise I use a dataset comprised of datasets of Portuguese students of math and Portuguese language in secondary education. The original datasets can be found from [here](https://archive.ics.uci.edu/ml/datasets/Student+Performance). The following chunks of code read in the dataset from my local folder and print out the names of the variables
+
+```{r read}
+alc<-read.csv(file = "data/alc.csv", header = TRUE, sep=",")
+colnames(alc)
+```
+
+**Explanations to the variables**
+
+* "school" = student's school
+* "sex" = student's sex
+* "age" = student's age
+* "address" = student's home address
+* "famsize" =  family size 
+* "Pstatus" = parent's cohabitation status (living together or apart), 
+* "Medu" = mother's education 
+* "Fedu" = father's education
+* "Mjob" = mother's job
+* "Fjob"= father's job
+* "reason" = reason to choose this school
+* "nursery" = attended nursery school (yes or no)
+* "internet" = Internet access at home
+* "guardian" = student's guardian (mother, father or other)
+* "traveltime" = home to school travel time
+* "studytime" = weekly study time
+* "failures" = number of past class failures
+* "schoolsup" = extra educational support
+* "famsup" =  family educational support
+* "paid" = extra paid classes within the course subject
+* "activities" =  extra-curricular activities
+* "higher" = wants to take higher education
+* "romantic" = with a romantic relationship
+* "famrel" = quality of family relationships
+* "freetime" = free time after school 
+* "goout" = going out with friends
+* "Dalc" = workday alcohol consumption
+* "Walc" = weekend alcohol consumption
+* "health" = current health status
+* "absences" = number of school absences
+* "G1" = first period grade
+* "G2" = second period grade
+* "G3" = final grade 
+* "alc_use" = average daily alcohol consumption (average of weekday and weekend consumption)
+* "high_use" = TRUE is alc_use>2, FALSE if alc_use<2 ([Likert Scale](https://en.wikipedia.org/wiki/Likert_scale))
+
+### Variables chose for the analysis and the hypotheses related to them
+
+I will look into how the students' alcohol use is related to the variables "sex" (M or F), "Pstatus" (A or T), "guardian" (mother, father or other) and "goout" (Likert scale 1-5). My hypotheses for the chosen variables are, that high use of alcohol is more common for
+
+**1. male than female students,**    
+**2. students whose parents live apart, than students whose parents live together**   
+**3. students whose guardian is someone else than either of the parents**  
+**4. students who go out with friends actively compared to those who don't**  
+
+### Analyses
+
+I will choose only the columns that I need for the analyses and will create a set called alcohol out of them. I need package 'dplyr' for this.
+
+```{r choose columns}
+library(dplyr)
+keep_columns <- c("sex","Pstatus", "guardian", "goout", "high_use")
+alcohol <- select(alc, one_of(keep_columns))
+```
+
+Next I will graphically examine the variables. The following code draws bar plots of each variable. I will need packages 'tidyr', 'dplyr' and 'ggplot2' for plotting. I have installed the packages beforehand and called 'dplyr' already earlier.
+
+```{r bar plots }
+library(tidyr); library(ggplot2)
+
+gather(alcohol) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+
+
+```
+The "goout" variable most often gets the value 3, which is an average value: not very high but not very low either. Mother was the most common guardian for students, followed by father. Some students had marked 'other' as guardian. Although high consumption of alcohol also appeared among students, low or normal consumption was more common. Clearly a bigger proportion of students had parents living together than parents living apart, while the gender distribution of students was almost equal. 
+
+
+
+
+Next I will examine the relationships between variables by crosstabulation.
+
+```{r table}
+table(high_use = alcohol$high_use, sex = alcohol$sex)
+
+table(high_use = alcohol$high_use, Pstatus = alcohol$Pstatus)
+
+table(high_use = alcohol$high_use, guardian = alcohol$guardian)
+
+table(high_use = alcohol$high_use, go_out = alcohol$goout)
+```
+
+According to the tables high use is more common for male students than for female students. Since the distribution between male and female students is almost equal, we can say that the results support hypothesis one and male students are more likely to use high amounts of alcohol than female students. If we look at the table related to 'Pstatus' and high use of alcohol, it first looks like hypothesis two is not supported. However, one should consider that the number of those students whose parents live together is much higher than 
+
+
+### sköpödöö, alaotsikko

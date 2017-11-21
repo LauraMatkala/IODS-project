@@ -1,4 +1,4 @@
-# RStudio Exercise 2: Analysis 
+# RStudio Exercise 2: linear regression
 ### Reading the data in and exploring its structure
 
 The data set that we use for this exercise is about the relationship between learning approaches and students' achievements in an introductory statistics course in Finland. The set includes students' age, attitude towards statistics , exam points and gender, as well as their replies to questions related to deep, strategic and surface learning. Likert scale (read more from [here](https://en.wikipedia.org/wiki/Likert_scale)) has been used in answering the questions and measuring the attitude.
