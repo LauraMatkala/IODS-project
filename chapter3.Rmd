@@ -3,7 +3,7 @@
 ### Basic information about the data set 
 In this exercise I use a dataset comprised of datasets of Portuguese students of math and Portuguese language in secondary education. The original datasets can be found from [here](https://archive.ics.uci.edu/ml/datasets/Student+Performance). The following chunks of code read in the dataset from my local folder and print out the names of the variables
 
-```{r read}
+```{r reading}
 alc<-read.csv(file = "data/alc.csv", header = TRUE, sep=",")
 colnames(alc)
 ```
@@ -67,10 +67,12 @@ alcohol <- select(alc, one_of(keep_columns))
 
 Next I will graphically examine the variables. The following code draws bar plots of each variable. I will need packages 'tidyr', 'dplyr' and 'ggplot2' for plotting. I have installed the packages beforehand and called 'dplyr' already earlier.
 
-```{r bar plots}
-library(tidyr); library(ggplot2)
+```{r bars}
+library(tidyr)
+library(ggplot2)
 gather(alcohol) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
 ```
+
 The "goout" variable most often gets the value 3, which is an average value: not very high but not very low either. Mother was the most common guardian for students, followed by father. Some students had marked 'other' as guardian. Although high consumption of alcohol also appeared among students, low or normal consumption was more common. Clearly a bigger proportion of students had parents living together than parents living apart, while the gender distribution of students was almost equal. 
 
 
@@ -88,7 +90,141 @@ table(high_use = alcohol$high_use, guardian = alcohol$guardian)
 table(high_use = alcohol$high_use, go_out = alcohol$goout)
 ```
 
-According to the tables high use is more common for male students than for female students. Since the distribution between male and female students is almost equal, we can say that the results support hypothesis one and male students are more likely to use high amounts of alcohol than female students. If we look at the table related to 'Pstatus' and high use of alcohol, it first looks like hypothesis two is not supported. However, one should consider that the number of those students whose parents live together is much higher than 
+To understand what these tables tell I calculated the percentages of students with high alcohol use for each variable statement. The calculations are below. 
+
+```{r percentages}
+female_high <- (42/(156+42))*100
+female_high
+male_high <-(72/(112+72))*100
+male_high
+
+parents_apart_high <- (12/(26+12))*100
+parents_apart_high
+parents_together_high <- (102/(242+102))*100
+parents_together_high
+
+guardian_father_high <- (30/(61+30))*100
+guardian_father_high
+guardian_mother_high <- (77/(198+77))*100
+guardian_mother_high
+guardian_other_high <- (7/(7+9))*100
+guardian_other_high
+
+go_out_1 <- (3/(19+3))*100
+go_out_1
+go_out_2 <- (16/(84+16))*100
+go_out_2
+go_out_3 <- (23/(103+23))*100
+go_out_3
+go_out_4 <- (40/(41+40))*100
+go_out_4
+go_out_5 <- (32/(21+32))*100
+go_out_5
+```
+
+Based on these percentages hypothesis number one is supported: 39 % of male students and 21 % of female students use high amounts of alcohol. The percentages for high alcohol use in students whose parents are apart (32 %) versus students whose parents live together (30 %) are almost similar, so hypothesis number two doesn't seem to be very strongly supported. Hypothesis three is supported, since the amount of high alcohol users when the guardian is other is 44 %, which is clearly higher than when the guardian is father (33 %) or mother (28 %). Also the fourth hypothesis is supported, since the amount of high drinkers clearly increases with the amount of going out. Of course, a more thorough examination is needed, as based on this information it is not possible to tell what differences are statistically significant and what are not. 
+
+### Building a logistic regression model
+
+In order to statistically examine the variables and their dependance from each other I am going to use logistic regression and build a model.
+
+```{r logistic}
+m <- glm(high_use ~ sex + Pstatus + guardian + goout, data = alcohol, family = "binomial")
+summary(m)
+```
+In order to see all coefficients of variable "sex" I will change the model and add -1. This way R will plot all coefficients and no intercept at all.  
+
+```{r logistic2}
+m <- glm(high_use ~ sex + Pstatus + guardian + goout-1  , data = alcohol, family = "binomial")
+summary(m)
+```
+
+It seems that the coefficients of "sex" are statistically significantly different from zero, which is what the Wald test in R tests for factorial variables ([ref.](https://stats.stackexchange.com/questions/60817/significance-of-categorical-predictor-in-logistic-regression)). 
+
+I noticed that R only prints all coefficients of the first factorial variable, which comes after ~ symbol in the code. I am not sure if there is a prettier way of doing this, but in order to see all coefficients of the factorial variables " sex", "Pstatus" and "guardian", I will create different models so that I just simply change the order of variables after ~ in the code. I will later also check the overall meaning of each factorial variable to the model. The variable "goout" is an integer, and I can directly see that it has a low p-value so it seems to be explaining high use of alcohol well. But to start with:
+
+Here I check the coefficients of variable Pstatus:  
+
+```{r test2}
+m3 <- glm(high_use ~  Pstatus + guardian + goout + sex -1, data = alcohol, family = "binomial")
+summary(m3)
+
+```
+
+The two coefficients of "Pstatus", 'apart' and 'together' seem to be statistically significantly different from zero.
+
+Next I will check variable "guardian".
 
 
-### sköpödöö, alaotsikko
+```{r test3}
+m4 <- glm(high_use ~ guardian + goout + sex + Pstatus-1, data = alcohol, family = "binomial")
+summary(m4)
+```
+
+And yes, 'father', 'mother' and 'other' all seem to be significantly different from zero. 
+
+The fact that all the coeffiecients that I tested above are different from zero mean that the variables are probably not completely meaningless to the model. In order to test that I will now perform a likelihood ratio test so, that I separately test the model with and without each of the factorial varibale.
+
+First I check variable "sex"
+```{r anova1}
+m1<-glm(high_use ~ sex + Pstatus + guardian + goout, data = alcohol, family = "binomial")
+m2<-glm(high_use ~ Pstatus + guardian + goout, data = alcohol, family = "binomial")
+anova(m1, m2, test="LRT")
+```
+
+The likelihood ratio test is highly significant, meaning that the variable "sex" should be kept in the model.
+Next I test the meaning of variable "Pstatus"
+
+```{r anova2}
+m1<-glm(high_use ~  Pstatus + guardian + goout + sex -1, data = alcohol, family = "binomial")
+m2<-glm(high_use ~ guardian + goout + sex, data = alcohol, family = "binomial")
+anova(m1, m2, test="LRT")
+```
+
+It looks like "Pstatus" is not a meaningful model parameter. Let's see if "guardian" is.
+
+```{r anova3}
+m1<-glm(high_use ~ guardian + goout + sex + Pstatus-1, data = alcohol, family = "binomial") 
+m2<-glm(high_use ~ goout + sex + Pstatus-1, data = alcohol, family = "binomial")
+anova(m1, m2, test="LRT")
+```
+
+For modelling purposes "guardian" doesn't seem to be important either. At the moment it looks like the important explaining variables to be kept in the model are "sex" and "goout". I will now adjust the model to its final form, show its summary and present its odds ratios
+
+```{r final_m}
+m <- glm(high_use ~ sex + goout, data = alcohol, family ="binomial")
+summary(m)
+
+OR <- coef(m) %>% exp
+CI<-confint(m) %>% exp
+cbind(OR, CI)
+```
+
+I have trouble in understanding odds ratios. If interpret the last rows of the previous output correctly, if a student is a male, the odds for him to be in using high amount of alcohol is twice as high as if a student is a female. And the confidence intervals mean that in 95 % of the cases the odds are between 1.48 and 3.91. I am even more unsure how to interpret the odds of variable "goout". I believe it is something like that if a student goes out often and is a male, the odds of the student to be using high amounts of alcohol is about twice as much as for a student who does not go out often. And in 95 % of the cases the odds are between 1.7 and 2.7. I am really struggling with this interpretation, so the odds that I have done something wrong are very high...
+
+### The predictive power of the model
+
+I will now look into the variables "sex" and "goout" that I chose for the model. Next I will provide a 2x2 cross tabulation of predictions versus the actual values.
+
+```{r predict}
+probabilities <- predict(m, type = "response")
+alcohol <- mutate(alcohol, probability = probabilities)
+alcohol <- mutate(alcohol, prediction = probability>0.5 )
+select(alcohol, sex, goout, high_use, probability, prediction) %>% tail(10)
+table(high_use = alcohol$high_use, prediction = alcohol$prediction)
+```
+
+I will also compute the training error (the total proportion of inaccurately classified individuals).
+
+```{r training error}
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+
+loss_func(class = alcohol$high_use, prob = alcohol$probability)
+
+
+```
+
+I would say that the total proportion of inaccurately classified individuals in the predictions that the model does is quite low. Thus, the model is working fairly well. 
