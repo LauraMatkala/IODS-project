@@ -67,12 +67,9 @@ alcohol <- select(alc, one_of(keep_columns))
 
 Next I will graphically examine the variables. The following code draws bar plots of each variable. I will need packages 'tidyr', 'dplyr' and 'ggplot2' for plotting. I have installed the packages beforehand and called 'dplyr' already earlier.
 
-```{r bar plots }
+```{r bar plots}
 library(tidyr); library(ggplot2)
-
 gather(alcohol) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
-
-
 ```
 The "goout" variable most often gets the value 3, which is an average value: not very high but not very low either. Mother was the most common guardian for students, followed by father. Some students had marked 'other' as guardian. Although high consumption of alcohol also appeared among students, low or normal consumption was more common. Clearly a bigger proportion of students had parents living together than parents living apart, while the gender distribution of students was almost equal. 
 
