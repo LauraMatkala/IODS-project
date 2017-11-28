@@ -65,6 +65,75 @@ I see that after scaling the values are now much smaller than they were in the n
 I will next perform a linear discriminant analysis on the dataset "train". 
 
 ```{r ldr}
+lda.fit <- lda(crime~., data = train)
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(train$crime)
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 2.3)
+```
+
+The plot shows also that with high crime rate variable "rad" is higher. Just to remind ourselves, "rad" equals to index of accessibility to radial highways. I guess it means that with higher index there are better possibilities to access the highway, and thus escape after committing a crime...
+
+I will now save the crime categories and remove the categorical crime variable from the "test" dataset.
+
+```{r replace2}
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+```
+
+Now I use my LDA model for predicting the classes with the test data and do crosstabulation of the predicted and actual classes from the test data.
+
+```{r predict}
+lda.pred <- predict(lda.fit, newdata = test)
+table(correct = correct_classes, predicted = lda.pred$class)
+```
+
+For high quantile the prediction seems to fit with correct values perfectly, as all of the cases could be predicted. All in all, the model is predicting actual cases quite well. 
+
+### k-means
+
+Let's reload the Boston dataset and scale it for some k-means calculations.
+
+```{r reload}
+library(MASS)
+data(Boston)
+boston_scaled <- scale(Boston)
+class(boston_scaled)
+boston_scaled<-as.data.frame(boston_scaled)
+```
+
+I want to calculate the distances between observations and will do that next. I will use Euclidian distances.
+
+```{r distance}
+
+dist_eu <- dist(boston_scaled)
+summary(dist_eu)
+```
 
 
+Now some k-means clustering:
 
+```{r kmeans}
+km <-kmeans(boston_scaled, centers = 4)
+pairs(boston_scaled, col = km$cluster) 
+
+
+```
+
+The results seem to be similar than they were with LDA, although the figure is rather messy and partially difficult to interpret.
+
+I will investigate what is the optimal number of clusters. The optimal number of clusters is when the total WCSS (within cluster sum of squares) drops radically.
+
+```{r optimal}
+set.seed(123)
+k_max <- 10 #  
+twcss <- sapply(1:k_max, function(k){kmeans(boston_scaled, k)$tot.withinss})
+qplot(x = 1:k_max, y = twcss, geom = 'line')
+```
