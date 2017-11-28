@@ -1,0 +1,70 @@
+# Clustering and classification
+
+### The data
+
+This weeks data needs no specific wrangling beforehand, as it comes directly from a package "MASS". We are using a dataset called Boston, which has variables related to housing in the suburbs of Boston, Massachusettes, USA. The data includes the following columns:
+
+
+* crim = per capita crime rate by town.
+* zn = proportion of residential land zoned for lots over 25,000 sq.ft.
+* indus = proportion of non-retail business acres per town.
+* chas = Charles River dummy variable (= 1 if tract bounds river; 0 otherwise).
+* nox = nitrogen oxides concentration (parts per 10 million).
+* rm = average number of rooms per dwelling.
+* age = proportion of owner-occupied units built prior to 1940.
+* dis = weighted mean of distances to five Boston employment centres.
+* rad = index of accessibility to radial highways.
+* tax = full-value property-tax rate per \$10,000.
+* ptratio = pupil-teacher ratio by town.
+* black = 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town.
+* lstat = lower status of the population (percent).
+* medv = median value of owner-occupied homes in \$1000s.
+
+As we can see, there is diverse data related to e.g. the crime rate, air quality (nox) and the proportion of black citizens.
+
+I will explore the data set a bit:
+
+```{r Boston}
+library(MASS)
+data("Boston")
+str(Boston)
+dim(Boston)
+summary(Boston)
+library(corrplot); library(tidyverse);library(ggplot2); library(GGally)
+gather(Boston) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
+cor_matrix<-cor(Boston)
+cor_matrix %>% round(digits =2)
+corrplot(cor_matrix, method="circle", type ="upper", cl.pos = "b", tl.pos ="d", tl.cex = 0.6)
+```
+
+The dataset consists of 506 rows and 14 columns. Most variables are numeric, except for "chas" and "rad", which are integers. With this many variables the pairs- plot looks really messy, so I decided to plot a bar plot and a correlation plot. The bar plot is not really working either, because some varibales, such as "black" or "dis" can hardly be seen at all in the graph. According to the correlation plot variable "crim" is best correlated (positively) with variables "rad" and "tax". Overall the best positive correlation is between "indus" and "nox" and best negative correlations between "nox" and "age", "age" and "dis", "indus" and "dis" as well as "lstat" and "medv".
+
+### Dataset wrangling
+
+I will next standardize the dataset and print out the summaries to see what standardizing did to the dataset. I will also create a categorical variable of the (scaled) crime rate, as well as replace the old "crim" with the new "crime" adn split the dataset into train and test sets.
+
+```{r standardize}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+class(boston_scaled)
+boston_scaled<-as.data.frame(boston_scaled)
+bins <- quantile(boston_scaled$crim)
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, label=c("low", "med_low", "med_high", "high"))
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+```
+
+I see that after scaling the values are now much smaller than they were in the non-scaled dataset, often even negative medians and minimum values. 
+
+### Linear discriminant analysis
+
+I will next perform a linear discriminant analysis on the dataset "train". 
+
+```{r ldr}
+
+
+
