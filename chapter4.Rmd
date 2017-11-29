@@ -129,7 +129,7 @@ pairs(boston_scaled, col = km$cluster)
 
 The results seem to be similar than they were with LDA, although the figure is rather messy and partially difficult to interpret.
 
-I will investigate what is the optimal number of clusters. The optimal number of clusters is when the total WCSS (within cluster sum of squares) drops radically.
+I will investigate what is the optimal number of clusters. The optimal number of clusters is when the total WCSS (within cluster sum of squares) drops radically. 
 
 ```{r optimal}
 set.seed(123)
@@ -137,3 +137,8 @@ k_max <- 10 #
 twcss <- sapply(1:k_max, function(k){kmeans(boston_scaled, k)$tot.withinss})
 qplot(x = 1:k_max, y = twcss, geom = 'line')
 ```
+
+Looking at the figure above it seems that the optimum amount of clusters is less than 2, since that is where WCSS drops down most radically. 
+
+
+
