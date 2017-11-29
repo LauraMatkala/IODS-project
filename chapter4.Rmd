@@ -90,7 +90,7 @@ test <- dplyr::select(test, -crime)
 
 Now I use my LDA model for predicting the classes with the test data and do crosstabulation of the predicted and actual classes from the test data.
 
-```{r predict}
+```{r predictions}
 lda.pred <- predict(lda.fit, newdata = test)
 table(correct = correct_classes, predicted = lda.pred$class)
 ```
