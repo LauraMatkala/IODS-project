@@ -1,0 +1,34 @@
+# Dimensionality reduction techniques
+
+### Data exploration
+
+This time we are using a dataset from the United Nations Development Programme. The dataset called "human" includes several variables from different countries around the world. Below are the explanations of variables.
+
+* SecoEd_FM = the female to male ratio of having at least secondary education
+* LaboFor_FM = the female to male ratio of people in the working force
+* ExpEdu = expected years of schooling
+* LifeE = life expectancy at birth
+* GNI = Gross National Income per capita
+* MatMort = maternal mortality ratio
+* AdoBirth = Adolescent birth rate
+* ParlRep = Percetange of female representatives in parliament
+
+Let's explore the data a bit now
+```{r data expl}
+human <- human <- read.csv(file = "data/human.csv", header = TRUE, sep = ",", row.names = 1)
+str(human)
+dim(human)
+library(dplyr)
+``` 
+
+Ok, for some reason GNI is now an integer although I succefully changed it to be numeric....the values still look the same as after I changed it to numeric, so I don't know if this matters at all.
+
+```{r overview}
+library(ggplot2); library(GGally); library(corrplot)
+ggpairs(human)
+cor(human)%>% corrplot()
+```
+
+The SecoEd_FM and LaboFor_FM variables have a right-skewed distribution, but does mostly not exceed 1. This means that in most countries more males have at least secondary education than females and more males are in the working force than females. Based on what the relationship between GNI and the two previous variables we can say that the female/male ratios are especially low in poor countries with low GNI. Similar relationship can be seen with e.g. GNI and life expectancy: in poor countries life expectancy is lower than in countries with high GNI. 
+
+If we look at the correlation plot, we can see that the highest positive correlations lie between life expectancy at birth and expected years of education, and adolescent birth and maternal mortality. The highest negative correlation lies between life expectancy at birth and maternal mortality. GNI is has highest (positive) correlation with expected education.  

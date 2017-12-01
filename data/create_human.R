@@ -34,3 +34,4 @@ human <- hd_gii
 glimpse(human) #195 observations, 19 variables
 
 write.csv(human, file = "data/human.csv", row.names = FALSE)
+
