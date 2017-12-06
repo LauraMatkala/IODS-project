@@ -21,12 +21,12 @@ dim(human)
 library(dplyr)
 ``` 
 
-Ok, for some reason GNI is now an integer although I succefully changed it to be numeric....the values still look the same as after I changed it to numeric, so I don't know if this matters at all.
+Ok, for some reason GNI is now an integer although I succefully changed it to be numeric....the values still look the same as after I changed it to numeric, so this probably has no effect on anything at all. I will leave it as it is.
 
 ```{r overview}
 library(ggplot2); library(GGally); library(corrplot)
 ggpairs(human)
-cor(human)%>% corrplot()
+cor(human)%>% corrplot(type = "upper") 
 ```
 
 The SecoEd_FM and LaboFor_FM variables have a right-skewed distribution, but does mostly not exceed 1. This means that in most countries more males have at least secondary education than females and more males are in the working force than females. Based on what the relationship between GNI and the two previous variables we can say that the female/male ratios are especially low in poor countries with low GNI. Similar relationship can be seen with e.g. GNI and life expectancy: in poor countries life expectancy is lower than in countries with high GNI. 
@@ -62,18 +62,29 @@ biplot(pca_humanstd, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_
 
 Clearly the latter figure is more readable than the previous. There were also some zero-length arrows in the PCA of non-standardized data, which led to them being left out completely. The standardization changed the data so that PCA is able to take into account all data there is. 
 
-The latter PCA looks like jfakjglaköjglajglöaj
+The latter PCA shows that there are differences between variables and their relationships to the principal components. This can be seen by looking at the arrows and their angles towards each other and to the PCs. In the first figure it looks like there are no differences at all, as all the arrows have no angle with the PCs. The smaller the angle is, whether between the different arrows, or the arrow and PC axis, the higher positive correlation there is. So we see that female parliament representation and female/male labour force ratio have quite small correlations with all other variables and also with PC1.
 
 
 ### FactomineR and MCA 
 
 
 ```{r factominer}
-library(FactoMineR)
+library(FactoMineR);library(tidyr)
 data("tea")
 str(tea)
-dim(tea)
-ggpairs(tea)
+dim
+gather(tea) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar()
 ```
+
+The figure is a bit messy, but unfortunately I don't have time now to try to make it clearer. It doesn't work the same as in datacamp, probably because I have all the variables left here instead of choosing a smaller dataset like in the datacamp examples. Next I will, anyway perform mutliple correspondence analysis on the whole dataset. Let's see what that'll look like..
+
+```{r MCA}
+library(stringr)
+tea$age <- str_replace(tea$age, pattern=",", replace ="") %>% as.factor() #this changes variable age to a factor, since all variables need to be factors
+mca <- MCA(tea, graph = FALSE)
+plot(mca, invisible=c("ind"), habillage = "quali")
+summary(mca)
+```
+
 
 

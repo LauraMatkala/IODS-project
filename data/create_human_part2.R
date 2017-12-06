@@ -17,7 +17,7 @@ str(human$GNI) #checking the structure, and indeed the variable GNI is now numer
 
 library(dplyr)
 keep_columns <- c("Country", "SecoEd_FM", "LaboFor_FM", "ExpEdu", "LifeEx", "GNI", "MatMort", "AdoBirth", "ParlRep")
-human <- select(human, one_of(keep_columns))
+human <- dplyr::select(human, one_of(keep_columns))
 
 #removing rows with missing values
 complete.cases(human)
@@ -29,7 +29,7 @@ human <- human [1:155,]
 
 #Define the row names of the data by the country names and remove the country name column from the data
 rownames(human) <- human$Country
-human <- select(human, -Country)
+human <- dplyr::select(human, -Country)
 
 #saving the data as csv, this time with rownames
 write.csv(human, file = "data/human.csv", row.names = TRUE)
